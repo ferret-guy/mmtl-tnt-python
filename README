@@ -25,6 +25,53 @@ TNT and MMTL field solver programs are available on the web.  See:
 
   http://mmtl.sourceforge.net/
 
+Build Instructions (Ubuntu/Debian)
+----------------------------------
+
+TNT uses Autotools and includes C/C++ and Fortran sources, plus
+documentation generation via LaTeX. The commands below install the
+dependencies needed to build everything, including the documentation
+and Tcl/Tk runtime packages required by the GUI:
+
+  sudo apt-get update
+  sudo apt-get install -y \
+    autoconf automake libtool gfortran \
+    tcl tcl-dev tk tk-dev tcllib bwidget tcl-itcl4 iwidgets4 \
+    texlive-latex-base latex2html
+
+Then bootstrap the Autotools files (including subdirectories), configure,
+and build:
+
+  ./bootstrap
+  for dir in bem calcCAP calcRL csdl gui sppdgTcllib units; do \
+    (cd "$dir" && ./bootstrap); \
+  done
+  for dir in sppdgTcllib/addressDialog sppdgTcllib/console \
+             sppdgTcllib/getFilePreview sppdgTcllib/sgraph; do \
+    (cd "$dir" && ./bootstrap); \
+  done
+  ./configure
+  make
+
+Optional checks can be run with:
+
+  make check
+
+Required test (impedance example)
+---------------------------------
+
+To exercise an impedance calculation and compare against the stored
+results, run the BEM test driver with Tk/Wish:
+
+  wish bem/tests/test_bem.tcl
+
+The log is written to bem/tests/test_bem.log. The example impedance
+output referenced in documentation is stored in bem/tests/test1.result.
+
+Finally, install with:
+
+  make install
+
 
 ----
 
